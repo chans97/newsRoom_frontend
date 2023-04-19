@@ -2,23 +2,29 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import NewsCard from '../../components/newsCard'
 import Navigation from '../../components/navbar'
+import axios from 'axios';
 
 function NewsList() {
     const router = useRouter();
     const { keyword } = router.query;
-    console.log(keyword)
     const [newsData, setNewsData] = useState([]);
 
     // 뉴스 데이터를 받아오는 로직
     useEffect(() => {
         // 뉴스 데이터를 가져오는 비동기 함수를 호출합니다.
         async function fetchData() {
-            const res = await fetch('/api/news/' + keyword);
-            const data = await res.json();
-            setNewsData(data)
+            try {
+                const response = await axios.get(`http://127.0.0.1:8000/api/news/${keyword}`);
+                console.log(`http://127.0.0.1:8000/api/news/${keyword}`)
+                setNewsData(response.data.result);
+            } catch (error) {
+                console.error(error);
+            }
         }
-        fetchData();
-    }, []);
+        if (keyword) {
+            fetchData();
+        }
+    }, [keyword]);
 
 
 
