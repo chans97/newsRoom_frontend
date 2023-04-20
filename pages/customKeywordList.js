@@ -6,80 +6,85 @@ import { useLoginContext } from '../context/loginstate';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-
+import axios from 'axios';
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Index() {
 
-    const router = useRouter()
-
-    const loginContext = useLoginContext();
-    useEffect(() => {
-        if (!loginContext.loggedIn) router.push('/login');
-    })
-
-    const [data, setData] = useState(null);
-    const [isLoading, setLoading] = useState(false);
-    const [searchTerm, setSearchTerm] = useState("");
-
-    const handleSearchChange = (event) => {
-        setSearchTerm(event.target.value);
-    };
-
-    return (
-        <>
-            <Navigation />
-            <div className='main-container'>
+  const [keywords, setKeywords] = useState([]);
+  const [isLoading, setLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
+  const [anyKeyword, setAnyKeyword] = useState(false)
 
 
-                <h1>Enter your news room</h1>
-                <div className="button-container">
-                    <div className="button-wrapper">
-                        <Link style={{ textDecoration: 'none' }}
-                            href={{
-                                pathname: '/newslist/scraped/[keyword]',
-                                query: { keyword: 'naver' },
-                            }}
-                        >
-                            <div className="button">naver</div>
-                        </Link>
-                    </div>
-                    <div className="button-wrapper">
-                        <Link style={{ textDecoration: 'none' }}
-                            href={{
-                                pathname: '/newslist/scraped/[keyword]',
-                                query: { keyword: 'kakao' },
-                            }}
-                        >
-                            <div className="button">kakao</div>
-                        </Link>
-                    </div>
-                    <div className="button-wrapper">
-                        <Link style={{ textDecoration: 'none' }}
-                            href={{
-                                pathname: '/newslist/scraped/[keyword]',
-                                query: { keyword: 'apple' },
-                            }}
-                        >
-                            <div className="button">apple</div>
-                        </Link>
-                    </div>
-                    <div className="button-wrapper">
-                        <Link style={{ textDecoration: 'none' }}
-                            href={{
-                                pathname: '/newslist/scraped/[keyword]',
-                                query: { keyword: 'google' },
-                            }}
-                        >
-                            <div className="button">google</div>
-                        </Link>
-                    </div>
-                </div>
+  const router = useRouter()
 
+  const loginContext = useLoginContext();
+  useEffect(() => {
+    if (!loginContext.loggedIn) router.push('/login');
+  })
+
+  useEffect(() => {
+    // 키워드를 가져오는 비동기 함수를 호출합니다.
+    async function fetchData() {
+      try {
+        const response = await axios.get(`http://127.0.0.1:8000/api/keywordlist?user_id=${loginContext.loggedIn}`);
+
+        if (response.data.SUCCESS) setKeywords(response.data.DATA.keywords)
+        else setIsError(true);
+      } catch (error) {
+        setIsError(true)
+        console.error(error);
+      }
+    }
+    fetchData();
+    setLoading(false);
+  }, []);
+
+  useEffect(() => {
+    if (keywords.length) {
+      setAnyKeyword(true);
+    }
+  }, [keywords])
+
+  return (
+    <>
+      <Navigation />
+      <div className='main-container'>
+
+
+        <h1>Enter your news room</h1>
+        {isLoading && <p> 로딩 중입니다...</p>}
+        {isError && <p> 오류가 있습니다. 다시 시작해주세요.</p>}
+        {anyKeyword || <p> 스크랩한 기사가 없습니다. 다시 검색해주세요.</p>}
+
+
+        <div className="button-container">
+          {keywords.map((keyword) => (
+            <div key={keyword.id} className="button-wrapper">
+              <Link style={{ textDecoration: 'none' }}
+                href={{
+                  pathname: '/newslist/scraped/[keyword]',
+                  query: { keyword_id: keyword.id, keyword: keyword.keyword },
+                }}
+              >
+                <div className="button">{keyword.keyword}</div>
+              </Link>
             </div>
+          ))}
 
-            <style jsx>{`
+
+
+        </div>
+
+      </div>
+
+      <style jsx>{`
+            p{
+              margin-top:25px;
+              color:#5D5FEF;
+            }
       .main-container{
         display: flex;
         flex-direction: column;
@@ -89,19 +94,6 @@ export default function Index() {
       h1{
         color:#5D5FEF;
       }
-      .search-container{
-        width:100%
-      }
-      .search-section {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 40px;
-        border: 1px solid black;
-        border-radius: 5px;
-        margin: 10px;
-      }
-
 
       .input-none{
         margin-left:10px;
@@ -169,6 +161,6 @@ export default function Index() {
           text-decoration: none;
         }
       `}</style>
-        </>
-    )
+    </>
+  )
 }

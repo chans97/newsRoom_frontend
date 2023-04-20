@@ -7,65 +7,85 @@ import loginlogo from '../public/mainlogo.png'
 import Link from 'next/link';
 
 export default function Login({ fail }) {
-    const router = useRouter();
-    const loginContext = useLoginContext();
-    const [isLoading, setLoading] = useState(false);
+  const router = useRouter();
+  const loginContext = useLoginContext();
+  const [isLoading, setLoading] = useState(false);
+  const [loginFail, setLoginFail] = useState(false);
 
-    const [ID, setID] = useState("");
-    useEffect(() => {
-        if (loginContext.loggedIn) router.push('/');
-    }, [loginContext.loggedIn, router]);
+  const [ID, setID] = useState("");
+  useEffect(() => {
+    if (loginContext.loggedIn) router.push('/');
+  }, [loginContext.loggedIn, router]);
 
-    async function sendLoginID(id) {
-        setLoading(true);
-        const data = await (await fetch(`api/login`)).json();
-        setLoading(false);
-        return data.SUCCESS;
+  async function loginWithCompanyID(id) {
+
+    const response = await fetch('http://localhost:8000/api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ company_id: id })
+    });
+    const data = await response.json();
+
+    return data;
+  }
+
+  async function onSubmit(event) {
+
+    event.preventDefault();
+    setLoading(true);
+    let loginData = { 'SUCCESS': '', 'DATA': '' };
+    try {
+      loginData = await loginWithCompanyID(ID);
+    }
+    catch {
+      loginData.SUCCESS = false;
     }
 
-    async function onSubmit(event) {
-        event.preventDefault();
-        const loginSuccess = await sendLoginID(ID);
-        if (loginSuccess) {
-            loginContext.setLoggedIn(true);
-            router.push('/');
-        } else {
-            router.push('/login');
-        }
+    setLoading(false);
+    if (loginData.SUCCESS) {
+      loginContext.setLoggedIn(loginData.DATA.newsroom_user.user_id);
+      router.push('/');
+    } else {
+      setLoginFail(true)
     }
+  }
 
-    const handleSearchChange = (event) => {
-        setID(event.target.value);
-    };
+  const handleSearchChange = (event) => {
+    setID(event.target.value);
+  };
 
-    return (
-        <>
-            <div className="main-container">
-                <div className="logo-section">
+  return (
+    <>
+      <div className="main-container">
+        <div className="logo-section">
 
-                    <Image src={loginlogo} alt="Login Logo" width={300} />
-                </div>
-                <form onSubmit={onSubmit} style={{ width: '100%' }}>
-                    <div className='search-container'>
+          <Image src={loginlogo} alt="Login Logo" width={300} />
+        </div>
+        <form onSubmit={onSubmit} style={{ width: '100%' }}>
+          <div className='search-container'>
 
-                        <div className='search-section'>
+            <div className='search-section'>
 
-                            <input className="input-none" type="text" placeholder=" 사번(ex. 123123)" value={ID} onChange={handleSearchChange} />
-                        </div>
-                        <div className="button-wrapper">
-
-                            <button className="button-search">
-
-                                Login</button>
-                        </div>
-                    </div>
-
-
-                </form>
-                {isLoading && <p>로그인 중입니다...</p>}
+              <input className="input-none" type="text" placeholder=" 사번(ex. 123123)" value={ID} onChange={handleSearchChange} />
             </div>
+            <div className="button-wrapper">
 
-            <style jsx>{`
+              <button className="button-search">
+
+                Login</button>
+            </div>
+          </div>
+
+
+        </form>
+        {isLoading && <p>로그인 중입니다...</p>}
+        {loginFail && <p>로그인이 실패했습니다. 다시 시도해주세요.</p>}
+
+      </div>
+
+      <style jsx>{`
             .logo-section{
                 width: 100%;
                 height: 400px;
@@ -129,15 +149,15 @@ export default function Login({ fail }) {
           background-color: #3B3CC4;
         }
       `}</style>
-        </>
-    );
+    </>
+  );
 }
 
 // 이 함수는 이름에서 알 수 있듯이 정확히 작동합니다. 서버에서 데이터를 보내고 페이지 구성 요소의 소품에 주입할 수 있습니다.
 // 이 기능의 장점은 React 클라이언트가 지연 없이 즉시 데이터를 표시할 수 있고 로딩 또는 오류 상태를 처리할 필요가 없다는 것입니다.
 
 export function getServerSideProps() {
-    return {
-        props: { fail: true },
-    };
+  return {
+    props: { fail: true },
+  };
 }

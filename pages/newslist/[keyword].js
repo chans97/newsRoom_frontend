@@ -4,25 +4,35 @@ import NewsCard from '../../components/newsCard'
 import Navigation from '../../components/navbar'
 import axios from 'axios';
 
+import { useLoginContext } from '../../context/loginstate';
 function NewsList() {
     const router = useRouter();
     const { keyword } = router.query;
     const [newsData, setNewsData] = useState([]);
+    const [isLoading, setLoading] = useState(true);
+    const [isError, setIsError] = useState(false);
 
+    const loginContext = useLoginContext();
+    useEffect(() => {
+        if (!loginContext.loggedIn) router.push('/login');
+    })
     // 뉴스 데이터를 받아오는 로직
     useEffect(() => {
         // 뉴스 데이터를 가져오는 비동기 함수를 호출합니다.
         async function fetchData() {
             try {
                 const response = await axios.get(`http://127.0.0.1:8000/api/news/${keyword}`);
-                console.log(`http://127.0.0.1:8000/api/news/${keyword}`)
-                setNewsData(response.data.result);
+                if (response.data.SUCCESS) setNewsData(response.data.DATA.result)
+                else setIsError(true);
+
             } catch (error) {
+                setIsError(true)
                 console.error(error);
             }
         }
         if (keyword) {
             fetchData();
+            setLoading(false);
         }
     }, [keyword]);
 
@@ -37,13 +47,21 @@ function NewsList() {
                     <h1 className='caed-list-title'>news list about {keyword}</h1>
                 </div>
 
+                {isLoading && <p>로딩 중입니다...</p>}
+                {isError && <p>오류가 있습니다. 다시 시작해주세요.</p>}
+
+
                 <div className="sub-container">
                     {newsData.map((news) => (
-                        <NewsCard key={news.id} news={news} />
+                        <NewsCard key={news.id} news={news} keyword={keyword} user_id={loginContext.loggedIn} />
                     ))}
                 </div>
             </div>
             <style jsx>{`
+
+      p{
+        color:#5D5FEF;
+      }
       .main-container{
         display: flex;
         flex-direction: column;

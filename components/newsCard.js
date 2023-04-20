@@ -1,25 +1,70 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSave } from '@fortawesome/free-solid-svg-icons'
 
-const NewsCard = ({ news }) => {
+const NewsCard = ({ news, keyword, user_id }) => {
+  const [isLoading, setLoading] = useState(false);
+  const [loginFail, setLoginFail] = useState(false);
+  const [isScraped, setIsScraped] = useState(false);
+
+  async function scrap_news_service() {
+
+    const response = await fetch('http://localhost:8000/api/scrape_news', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(
+        {
+          "keyword": keyword,
+          "title": news.title,
+          "summary": news.summary,
+          "broadcaster": news.broadcaster,
+          "created_at": new Date(),
+          "url": news.url,
+          "user_id": user_id
+        }
+      )
+    });
+    const data = await response.json();
+
+    return data;
+  }
+
+  async function scrap_news_controller(event) {
+
+    event.preventDefault();
+    setLoading(true);
+    let result_data = { 'SUCCESS': '', 'DATA': '' };
+    try {
+      result_data = await scrap_news_service();
+    }
+    catch {
+      result_data.SUCCESS = false;
+    }
+    if (result_data.SUCCESS) setIsScraped(true);
+
+    setLoading(false);
+  }
+
   return (
     <>
       <div className="newscard">
         <div className="news-wrapper">
-          <h3 className="title">{news.title}</h3>
+          <a target="_blank" href={news.url}><h3 className="title" >{news.title}</h3></a>
           <p className="summary">{news.summary}</p>
           <span className="broadcaster">{news.broadcaster}</span>
           <span className='broadcaster'> | </span>
           <span className="broadcaster">{news.broadcastTime}</span>
         </div>
+        {isScraped ||
+          <div className="trash-wrapper fa-trash" onClick={scrap_news_controller}>
+            <div>
+              <FontAwesomeIcon icon={faSave} size="2x" />
+            </div>
 
-        <div className="trash-wrapper fa-trash">
-          <div>
-            <FontAwesomeIcon icon={faSave} size="2x" />
           </div>
-
-        </div>
+        }
       </div>
       <style jsx>{`
         .newscard {

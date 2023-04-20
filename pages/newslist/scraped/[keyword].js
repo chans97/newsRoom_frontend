@@ -3,21 +3,37 @@ import { useEffect, useState } from 'react';
 import NewsCardScraped from '../../../components/newsCardScraped'
 import Navigation from '../../../components/navbar'
 
+import { useLoginContext } from '../../../context/loginstate';
+import axios from 'axios';
+
+
 function NewsList() {
     const router = useRouter();
-    const { keyword } = router.query;
-    console.log(keyword)
+    const { keyword_id, keyword } = router.query;
     const [newsData, setNewsData] = useState([]);
+    const [isLoading, setLoading] = useState(false);
+    const [isError, setIsError] = useState(false);
 
+    const loginContext = useLoginContext();
+    useEffect(() => {
+        if (!loginContext.loggedIn) router.push('/login');
+    })
     // 뉴스 데이터를 받아오는 로직
     useEffect(() => {
-        // 뉴스 데이터를 가져오는 비동기 함수를 호출합니다.
+        // 키워드를 가져오는 비동기 함수를 호출합니다.
         async function fetchData() {
-            const res = await fetch('/api/news/' + keyword);
-            const data = await res.json();
-            setNewsData(data)
+            try {
+                console.log(keyword_id);
+                const response = await axios.get(`http://127.0.0.1:8000/api/scraped_news?keyword_id=${keyword_id}`);
+                if (response.data.SUCCESS) setNewsData(response.data.DATA.scraped_news)
+                // else setIsError(true);
+            } catch (error) {
+                setIsError(true)
+                console.error(error);
+            }
         }
         fetchData();
+        setLoading(false);
     }, []);
 
 
@@ -28,7 +44,7 @@ function NewsList() {
             <div className='main-container'>
                 <div className='caed-list-title-section'>
 
-                    <h1 className='caed-list-title'>news scraped by {keyword}</h1>
+                    <h1 className='caed-list-title'>news scraped by {keyword} </h1>
                 </div>
 
                 <div className="sub-container">

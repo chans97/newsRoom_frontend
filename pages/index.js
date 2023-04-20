@@ -6,7 +6,7 @@ import { useLoginContext } from '../context/loginstate';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-
+import axios from 'axios';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -18,14 +18,39 @@ export default function Index() {
   useEffect(() => {
     if (!loginContext.loggedIn) router.push('/login');
   })
-
-  const [data, setData] = useState(null);
-  const [isLoading, setLoading] = useState(false);
+  const [keywords, setKeywords] = useState([]);
+  const [isLoading, setLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
+  const [anyKeyword, setAnyKeyword] = useState(false)
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
+
+  useEffect(() => {
+    // 키워드를 가져오는 비동기 함수를 호출합니다.
+    async function fetchData() {
+      try {
+        const response = await axios.get(`http://127.0.0.1:8000/api/keywordlist?user_id=${loginContext.loggedIn}`);
+
+        if (response.data.SUCCESS) setKeywords(response.data.DATA.keywords)
+        else setIsError(true);
+      } catch (error) {
+        setIsError(true)
+        console.error(error);
+      }
+    }
+    fetchData();
+    setLoading(false);
+  }, []);
+
+  useEffect(() => {
+    if (keywords.length) {
+      setAnyKeyword(true);
+    }
+  }, [keywords])
+
 
   return (
     <>
@@ -49,55 +74,28 @@ export default function Index() {
             </Link>
           </div>
         </form>
+        {anyKeyword && <>
+          <div className='span-margin'>
+            or
+          </div>
 
-        <div className='span-margin'>
-          or
-        </div>
-
-        <h1>Select keyword for news</h1>
+          <h1>Select keyword for news</h1>
+        </>
+        }
         <div className="button-container">
-          <div className="button-wrapper">
-            <Link style={{ textDecoration: 'none' }}
-              href={{
-                pathname: '/newslist/[keyword]',
-                query: { keyword: 'naver' },
-              }}
-            >
-              <div className="button">naver</div>
-            </Link>
-          </div>
-          <div className="button-wrapper">
-            <Link style={{ textDecoration: 'none' }}
-              href={{
-                pathname: '/newslist/[keyword]',
-                query: { keyword: 'kakao' },
-              }}
-            >
-              <div className="button">kakao</div>
-            </Link>
-          </div>
-          <div className="button-wrapper">
-            <Link style={{ textDecoration: 'none' }}
-              href={{
-                pathname: '/newslist/[keyword]',
-                query: { keyword: 'apple' },
-              }}
-            >
-              <div className="button">apple</div>
-            </Link>
-          </div>
-          <div className="button-wrapper">
-            <Link style={{ textDecoration: 'none' }}
-              href={{
-                pathname: '/newslist/[keyword]',
-                query: { keyword: 'google' },
-              }}
-            >
-              <div className="button">google</div>
-            </Link>
-          </div>
+          {keywords.map((keyword) => (
+            <div key={keyword.id} className="button-wrapper">
+              <Link style={{ textDecoration: 'none' }}
+                href={{
+                  pathname: '/newslist/[keyword]',
+                  query: { keyword: keyword.keyword },
+                }}
+              >
+                <div className="button">{keyword.keyword}</div>
+              </Link>
+            </div>
+          ))}
         </div>
-
       </div>
 
       <style jsx>{`
