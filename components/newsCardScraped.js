@@ -1,65 +1,77 @@
 import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faTrash, faSpinner } from '@fortawesome/free-solid-svg-icons'
+import axios from 'axios';
 
-const NewsCardScraped = ({ news }) => {
+const NewsCardScraped = ({ news, newsListChange, setNewsListChange, setIsNoNews, setUrl }) => {
   const [isLoading, setLoading] = useState(false);
   const [loginFail, setLoginFail] = useState(false);
   const [isScraped, setIsScraped] = useState(false);
 
   //  문제는 사라진 이후에 처리가 필요하다는 것 keyword가 삭제된 경우 server에서 안내해주고 우리는 그 사인을 보고 다시 room으로 와야 한다.
   // 일단 삭제는 됨
-  async function scrap_news_service() {
-    const response = await fetch('http://localhost:8000/api/delete/scrape_news', {
-      method: 'POST',
+  async function delete_scraped_news_service() {
+    let result = {}
+    const data = {
+      "scraped_news_id": news.id
+    }
+
+    const config = {
       headers: {
         'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(
-        {
-          "scraped_news_id": news.id
-        }
-      )
-    });
-    const data = await response.json();
-
-    return data;
+      }
+    }
+    await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/delete/scrape_news`, data, config)
+      .then(response => {
+        result = response.data;
+      })
+      // 통일된 형식으로 응답을 만들어 준다.
+      .catch(error => {
+        result = { 'SUCCESS': false, 'ERROR': error }
+      });
+    return result;
   }
 
-  async function scrap_news_controller(event) {
-
+  async function delete_scraped_news_controller(event) {
     event.preventDefault();
     setLoading(true);
-    let result_data = { 'SUCCESS': '', 'DATA': '' };
-    try {
-      result_data = await scrap_news_service();
-    }
-    catch {
-      result_data.SUCCESS = false;
-    }
-    if (result_data.SUCCESS) setIsScraped(true);
-
+    const result_data = await delete_scraped_news_service();
     setLoading(false);
+    if (result_data.SUCCESS) {
+      setNewsListChange(newsListChange => !newsListChange);
+      setIsNoNews(result_data.DATA.is_no_more_news)
+    }
+
   }
   return (
     <>
       <div className="newscard">
         <div className="news-wrapper">
-          <a target="_blank" href={news.url}><h3 className="title" >{news.title}</h3></a>
+          {setUrl ? <h3 className="title" onClick={setUrl}>{news.title}</h3> : <a target="_blank" href={news.url}><h3 className="title" >{news.title}</h3></a>}
+
           <p className="summary">{news.summary}</p>
           <span className="broadcaster">{news.broadcaster}</span>
           <span className='broadcaster'> | </span>
           <span className="broadcaster">{news.created_at}</span>
         </div>
+        {isLoading ?
+          <div className="trash-wrapper">
+            <div>
+              <FontAwesomeIcon icon={faSpinner} spin="true" />
+            </div>
+          </div> :
+          <div className="trash-wrapper fa-trash" onClick={delete_scraped_news_controller}>
+            <div>
+              <FontAwesomeIcon icon={faTrash} />
+            </div>
 
-        <div className="trash-wrapper fa-trash" onClick={scrap_news_controller}>
-          <div>
-            <FontAwesomeIcon icon={faTrash} />
           </div>
-
-        </div>
+        }
       </div>
       <style jsx>{`
+      h3{
+        cursor:pointer;
+      }
         .newscard {
           display: flex;
           justify-content: space-between;

@@ -1,0 +1,11 @@
+@font-face {
+    font-family: "DonegalOne";
+    font-weight: 50;
+    src: url("./DonegalOne-Regular.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "SongMyung";
+    font-weight: 50;
+    src: url("./SongMyung-Regular.ttf") format("truetype");
+}
