@@ -43,9 +43,7 @@ export default function Search_keyword_pc({ handleSearchChange, searchTerm, logi
 
           </div>
           {isError && <p>에러가 발생했습니다. 새로고침해주세요.</p>}
-          {isLoading &&
-            <Loading_Spinner />
-          }
+
 
           <div className='or-box'>
 
@@ -71,6 +69,9 @@ export default function Search_keyword_pc({ handleSearchChange, searchTerm, logi
                   </Link>
                 </div>
               ))}
+              {isLoading &&
+                <Loading_Spinner />
+              }
             </div>
           </div>
         </div>

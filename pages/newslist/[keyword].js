@@ -58,7 +58,6 @@ export default function NewsList() {
 
     const fetchMoreData = async () => {
         // isLoading 상태를 true로 업데이트합니다.
-        console.log('fetchMoreData to bottom!', isNewLoading);
         await axios
             .get(`${process.env.NEXT_PUBLIC_API_URL}/api/news/${keyword}/${lastIndex + 1}`)
             .then((response) => {
@@ -71,7 +70,6 @@ export default function NewsList() {
                 } else setIsError(true);
             })
             .catch((e) => {
-                console.log("!@#!@#!");
                 setIsError(true);
             })
             .finally(() => {
@@ -87,7 +85,6 @@ export default function NewsList() {
 
     const handleScroll = () => {
         const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-        console.log(scrollHeight - scrollTop, clientHeight)
         if (((scrollHeight - scrollTop) - clientHeight) < 0.5) {
             setIsNewLoading(true);
         }

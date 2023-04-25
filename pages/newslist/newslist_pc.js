@@ -29,8 +29,7 @@ export default function NewsList_pc({ isNewLoading, excelDownload, keyword, isLo
                         <h1 className='card-list-title'>news list about {keyword}</h1>
                     </div>
 
-                    {isLoading &&
-                        <Loading_Spinner />}
+
                     {isError && <p>오류가 있습니다. 다시 시작해주세요.</p>}
                     <div className='button-wrapper'>
                         <div className='button-excel-export' onClick={excelDownload}>
@@ -45,6 +44,9 @@ export default function NewsList_pc({ isNewLoading, excelDownload, keyword, isLo
                             <NewsCard key={news.news_id} news={news} keyword={keyword} user_id={loginContext.loggedIn}
                                 setUrl={() => handleClick(news.url)} />
                         ))}
+
+                        {isLoading &&
+                            <Loading_Spinner />}
                         <div className='newLoading-section'>
 
                             {isNewLoading && <Loading_Spinner></Loading_Spinner>}
