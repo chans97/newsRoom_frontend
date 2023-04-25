@@ -2,6 +2,7 @@
 import NewsCardScraped from '../../../components/newsCardScraped'
 import Navigation from '../../../components/navbar'
 import TogglePeriod from '../../../components/toggle_period';
+import Loading_Spinner from '../../../components/loading';
 
 
 function NewsList_mobile({
@@ -35,7 +36,7 @@ function NewsList_mobile({
                     <TogglePeriod isTodayOnlyActive={isTodayOnlyActive} setIsTodayOnlyActive={setIsTodayOnlyActive} />
                 </div>
                 <div className="sub-container">
-                    {renderdNews.map((news) => (
+                    {renderdNews?.map((news) => (
                         <NewsCardScraped key={news.id} news={news} newsListChange={newsListChange} setNewsListChange={setNewsListChange} setIsNoNews={setIsNoNews} />
                     ))}
                 </div>

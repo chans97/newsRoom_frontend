@@ -70,7 +70,7 @@ export default function Login({ fail }) {
             <span className="description-title">
               news scrape flatform : <br></br>newsRoom
             </span>
-            <span className="description">If you're looking to gather news stories that interest you,
+            <span className="description">If you&apos;re looking to gather news stories that interest you,
               look no further than our news scraping platform!</span>
 
             <span className="description">With our platform, you can easily collect and
@@ -79,7 +79,7 @@ export default function Login({ fail }) {
             <span className="description">You can explore news based on topics or keywords that interest you,
               and easily share or save your findings.</span>
 
-            <span className="description">Don't wait to experience the benefits of our news scraping platform.
+            <span className="description">Don&apos;t wait to experience the benefits of our news scraping platform.
               Start your newscraping journey today!</span>
           </div>
           <div className="lottie-section">

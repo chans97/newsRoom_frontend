@@ -56,14 +56,14 @@ export default function Index() {
 
           <div className='title-section'>
             You can view all the news articles<br />
-            I've collected so far right here.
+            I&apos;ve collected so far right here.
 
           </div>
           <div className='contents-section'>
-            <span>If you're interested in seeing the news stories</span><br />
-            <span>I've been keeping track of, you're in luck!</span><br />
+            <span>If you&apos;re interested in seeing the news stories</span><br />
+            <span>I&apos;ve been keeping track of, you&apos;re in luck!</span><br />
             <span>You can easily access a comprehensive list of all the articles</span><br />
-            <span>I've saved right here on this page</span>
+            <span>I&apos;ve saved right here on this page</span>
 
           </div>
 
@@ -81,7 +81,7 @@ export default function Index() {
                 href={{
                   pathname: '/'
                 }}
-              ><p>  "여기"를 눌러 기사를 스크랩해주세요.</p></Link></>}
+              ><p>  &quot;여기&quot;를 눌러 기사를 스크랩해주세요.</p></Link></>}
           {isError && <p> 오류가 있습니다. 다시 시작해주세요.</p>}
 
 

@@ -22,7 +22,7 @@ export default function NewsList_mobile({ isNewLoading, keyword, isLoading, isEr
 
 
         <div className="sub-container">
-          {newsData.map((news) => (
+          {newsData?.map((news) => (
             <NewsCard key={news.news_id} news={news} keyword={keyword} user_id={loginContext.loggedIn} />
           ))}
           <div className='newLoading-section'>

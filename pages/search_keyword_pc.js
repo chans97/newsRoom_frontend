@@ -14,68 +14,68 @@ const inter = Inter({ subsets: ['latin'] })
 
 export default function Search_keyword_pc({ handleSearchChange, searchTerm, loginContext, keywords, anyKeyword, isError, isLoading }) {
 
-    return (
-        <>
-            {loginContext.loggedIn && <>
-                <Navigation />
-                <div className='main-container'>
-                    <div className='search-box'>
+  return (
+    <>
+      {loginContext?.loggedIn && <>
+        <Navigation />
+        <div className='main-container'>
+          <div className='search-box'>
 
-                        <form className='button-container'>
+            <form className='button-container'>
 
-                            <h1>Select keyword for news</h1>
-                            <div className='search-section'>
-                                <FontAwesomeIcon icon={faSearch} />
-                                <input className="input-none" type="text" placeholder="Search keyword for news (ex. 한국투자증권)"
-                                    value={searchTerm} onChange={handleSearchChange} />
-                            </div>
-                            <div className="button-wrapper">
-                                <Link style={{ textDecoration: 'none' }}
-                                    href={{
-                                        pathname: '/newslist/[keyword]',
-                                        query: { keyword: searchTerm ? searchTerm : "한국투자증권" },
-                                    }}
-                                >
-                                    <button style={{ width: '100%' }} className="button-search">Search</button>
-                                </Link>
-                            </div>
-                        </form>
+              <h1>Select keyword for news</h1>
+              <div className='search-section'>
+                <FontAwesomeIcon icon={faSearch} />
+                <input className="input-none" type="text" placeholder="Search keyword for news (ex. 한국투자증권)"
+                  value={searchTerm} onChange={handleSearchChange} />
+              </div>
+              <div className="button-wrapper">
+                <Link style={{ textDecoration: 'none' }}
+                  href={{
+                    pathname: '/newslist/[keyword]',
+                    query: { keyword: searchTerm ? searchTerm : "한국투자증권" },
+                  }}
+                >
+                  <button style={{ width: '100%' }} className="button-search">Search</button>
+                </Link>
+              </div>
+            </form>
 
-                    </div>
-                    {isError && <p>에러가 발생했습니다. 새로고침해주세요.</p>}
-                    {isLoading &&
-                        <Loading_Spinner />
-                    }
+          </div>
+          {isError && <p>에러가 발생했습니다. 새로고침해주세요.</p>}
+          {isLoading &&
+            <Loading_Spinner />
+          }
 
-                    <div className='or-box'>
+          <div className='or-box'>
 
-                        <div className='or-span'>
-                            or
-                        </div>
+            <div className='or-span'>
+              or
+            </div>
 
-                    </div>
-                    <div className='select-box'>
+          </div>
+          <div className='select-box'>
 
-                        <div className="button-container">
-                            <h1>Select keyword for news</h1>
-                            {anyKeyword || <span>현재 스크랩된 키워드가 없습니다.</span>}
-                            {keywords.map((keyword) => (
-                                <div key={keyword.id} className="button-wrapper">
-                                    <Link style={{ textDecoration: 'none' }}
-                                        href={{
-                                            pathname: '/newslist/[keyword]',
-                                            query: { keyword: keyword.keyword },
-                                        }}
-                                    >
-                                        <div className="button">{keyword.keyword}</div>
-                                    </Link>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
+            <div className="button-container">
+              <h1>Select keyword for news</h1>
+              {anyKeyword || <span>현재 스크랩된 키워드가 없습니다.</span>}
+              {keywords.map((keyword) => (
+                <div key={keyword.id} className="button-wrapper">
+                  <Link style={{ textDecoration: 'none' }}
+                    href={{
+                      pathname: '/newslist/[keyword]',
+                      query: { keyword: keyword.keyword },
+                    }}
+                  >
+                    <div className="button">{keyword.keyword}</div>
+                  </Link>
                 </div>
-            </>}
-            <style jsx>{`
+              ))}
+            </div>
+          </div>
+        </div>
+      </>}
+      <style jsx>{`
             span{
                 color : #5D5FEF;
                 margin: 0 auto;
@@ -201,6 +201,6 @@ export default function Search_keyword_pc({ handleSearchChange, searchTerm, logi
           text-decoration: none;
         }
       `}</style>
-        </>
-    )
+    </>
+  )
 }

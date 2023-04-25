@@ -53,7 +53,7 @@ export default function Search_keyword_mobile({ handleSearchChange, searchTerm, 
         }
 
         <div className="button-container">
-          {keywords.map((keyword) => (
+          {keywords?.map((keyword) => (
             <div key={keyword.id} className="button-wrapper">
               <Link style={{ textDecoration: 'none' }}
                 href={{

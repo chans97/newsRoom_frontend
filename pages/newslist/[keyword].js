@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import NewsList_pc from './newslist_pc';
-import NewsList_mobile from './newlist_mobile'
+import NewsList_mobile from './newslist_mobile'
 
 import { useLoginContext } from '../../context/loginstate';
 import NoSsr from "../../components/NoSsr";
