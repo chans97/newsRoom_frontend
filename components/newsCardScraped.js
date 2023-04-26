@@ -79,6 +79,7 @@ const NewsCardScraped = ({ news, newsListChange, setNewsListChange, setIsNoNews,
         cursor:pointer;
       }
       .newscard {
+        background-color: white;
         opacity: 1;
         transition: all 0.3s ease-in-out;
         display: flex;

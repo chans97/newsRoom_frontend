@@ -105,6 +105,7 @@ const NewsCard = ({ news, keyword, user_id, setUrl }) => {
             border: 2px solid #5D5FEF;
             border-radius: 5px;
             margin-bottom: 10px;
+            background-color: white;
             transform: perspective(1000px) rotateX(90deg) rotateY(0deg);
           
         }
