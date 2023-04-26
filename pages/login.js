@@ -68,7 +68,7 @@ export default function Login({ fail }) {
         <div className="desktop-section">
           <div className="description-section">
             <span className="description-title">
-              news scrape flatform : <br></br>newsRoom
+              news scrape flatform : <br></br>newsRoom(Beta)
             </span>
             <span className="description">If you&apos;re looking to gather news stories that interest you,
               look no further than our news scraping platform!</span>

@@ -7,8 +7,19 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileExcel, faMinusCircle, faPlus, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 
 import Loading_Spinner from '../../components/loading'
+import TogglePeriod from '../../components/toggle_period';
 
-export default function NewsList_pc({ isNewLoading, excelDownload, keyword, isLoading, isError, newsData, loginContext }) {
+export default function NewsList_pc({
+    isNewLoading,
+    excelDownload,
+    keyword,
+    isLoading,
+    isError,
+    newsData,
+    loginContext,
+    isRecentlyActive,
+    setIsRecentlyActive
+}) {
 
 
     const [url, setUrl] = useState('');
@@ -31,6 +42,13 @@ export default function NewsList_pc({ isNewLoading, excelDownload, keyword, isLo
 
 
                     {isError && <p>오류가 있습니다. 다시 시작해주세요.</p>}
+                    <div className='toggle-period-section'>
+                        <span className='toggle-description'>
+                            {isRecentlyActive ? "recently" : "accurate"}
+
+                        </span>
+                        <TogglePeriod isTodayOnlyActive={isRecentlyActive} setIsTodayOnlyActive={setIsRecentlyActive} />
+                    </div>
                     <div className='button-wrapper'>
                         <div className='button-excel-export' onClick={excelDownload}>
                             <FontAwesomeIcon icon={faFileExcel} />
@@ -76,6 +94,20 @@ export default function NewsList_pc({ isNewLoading, excelDownload, keyword, isLo
 
 
             <style jsx>{`
+            .toggle-description{
+                font-size: 11px;
+                color: #5D5FEF;
+                margin-right:5px;
+            }
+            .toggle-period-section{
+                display: flex;
+                width: 100%;
+                justify-content: end;
+                align-items: center;
+                margin-right: 20px;
+
+
+            }
                   .newLoading-section{
                     height: 80px;
                     width: 100%;

@@ -42,8 +42,7 @@ export default function NewsList_pc({
                         <h1 className='card-list-title'>news scraped by {keyword}</h1>
                     </div>
 
-                    {isLoading &&
-                        <Loading_Spinner />}
+
                     {isError && <p>오류가 있습니다. 다시 시작해주세요.</p>}
                     <div className='toggle-period-section'>
                         <span className='toggle-description'>
@@ -65,6 +64,8 @@ export default function NewsList_pc({
                             <NewsCardScraped key={news.id} news={news} newsListChange={newsListChange} setNewsListChange={setNewsListChange} setIsNoNews={setIsNoNews} setUrl={() => handleClick(news.url)} />
 
                         ))}
+                        {isLoading &&
+                            <Loading_Spinner />}
                     </div>
                 </div>
 
@@ -100,7 +101,6 @@ export default function NewsList_pc({
                 width: 100%;
                 justify-content: end;
                 align-items: center;
-                margin-bottom: 10px;
                 margin-right: 20px;
 
 

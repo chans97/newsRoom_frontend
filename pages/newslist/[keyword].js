@@ -57,9 +57,11 @@ export default function NewsList() {
     const [isNewError, setIsNewError] = useState(false);
 
     const fetchMoreData = async () => {
+        let api_url = "/api/news/"
+        if (isRecentlyActive) api_url = "/api/news/recently/"
         // isLoading 상태를 true로 업데이트합니다.
         await axios
-            .get(`${process.env.NEXT_PUBLIC_API_URL}/api/news/${keyword}/${lastIndex + 1}`)
+            .get(`${process.env.NEXT_PUBLIC_API_URL}${api_url}${keyword}/${lastIndex + 1}`)
             .then((response) => {
                 if (response.data.SUCCESS) {
                     setLastIndex(response.data.DATA.result[9].news_id);
@@ -107,7 +109,17 @@ export default function NewsList() {
     const [isLoading, setLoading] = useState(true);
     const [isError, setIsError] = useState(false);
 
+    const [isRecentlyActive, setIsRecentlyActive] = useState(false);
+    const [reloadRecentlyActive, setReloadRecentlyActive] = useState(false);
+
     const loginContext = useLoginContext();
+
+    // userEffect chain 을 통해서 비동기 속의 동기성을 확보
+    useEffect(() => {
+        setLastIndex(0);
+        setReloadRecentlyActive(isRecentlyActive)
+    }, [isRecentlyActive])
+
     useEffect(() => {
         if (!loginContext.loggedIn) router.push('/login');
     })
@@ -115,7 +127,10 @@ export default function NewsList() {
     useEffect(() => {
         // 뉴스 데이터를 가져오는 비동기 함수를 호출합니다.
         async function fetchData() {
-            await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/news/${keyword}/${lastIndex + 1}`)
+
+            let api_url = "/api/news/"
+            if (reloadRecentlyActive) api_url = "/api/news/recently/"
+            await axios.get(`${process.env.NEXT_PUBLIC_API_URL}${api_url}${keyword}/${lastIndex + 1}`)
                 .then(response => {
                     if (response.data.SUCCESS) {
                         setNewsData(response.data.DATA.result);
@@ -133,7 +148,7 @@ export default function NewsList() {
         if (keyword) {
             fetchData();
         }
-    }, [keyword]);
+    }, [keyword, reloadRecentlyActive]);
 
     const isPc = useMediaQuery({
         query: "(min-width:900px)"
@@ -150,7 +165,10 @@ export default function NewsList() {
                         isLoading={isLoading}
                         loginContext={loginContext}
                         keyword={keyword}
-                        newsData={newsData}>
+                        newsData={newsData}
+                        isRecentlyActive={isRecentlyActive}
+                        setIsRecentlyActive={setIsRecentlyActive}
+                    >
                     </NewsList_pc> :
                     <NewsList_mobile
                         isNewLoading={isNewLoading}
@@ -158,7 +176,10 @@ export default function NewsList() {
                         isLoading={isLoading}
                         loginContext={loginContext}
                         keyword={keyword}
-                        newsData={newsData}>
+                        newsData={newsData}
+                        isRecentlyActive={isRecentlyActive}
+                        setIsRecentlyActive={setIsRecentlyActive}
+                    >
                     </NewsList_mobile>}
             </>
         </NoSsr>
