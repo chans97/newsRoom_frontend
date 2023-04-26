@@ -127,7 +127,6 @@ export default function NewsList() {
     useEffect(() => {
         // 뉴스 데이터를 가져오는 비동기 함수를 호출합니다.
         async function fetchData() {
-
             let api_url = "/api/news/"
             if (reloadRecentlyActive) api_url = "/api/news/recently/"
             await axios.get(`${process.env.NEXT_PUBLIC_API_URL}${api_url}${keyword}/${lastIndex + 1}`)
@@ -146,6 +145,7 @@ export default function NewsList() {
 
         }
         if (keyword) {
+            setLoading(true)
             fetchData();
         }
     }, [keyword, reloadRecentlyActive]);

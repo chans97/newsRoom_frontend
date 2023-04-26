@@ -60,12 +60,16 @@ export default function NewsList_pc({
                         </div>
                     </div>
                     <div className="sub-container">
-                        {renderdNews?.map((news) => (
-                            <NewsCardScraped key={news.id} news={news} newsListChange={newsListChange} setNewsListChange={setNewsListChange} setIsNoNews={setIsNoNews} setUrl={() => handleClick(news.url)} />
+                        {isLoading ?
+                            <Loading_Spinner />
+                            : <>
+                                {renderdNews?.map((news) => (
+                                    <NewsCardScraped key={news.id} news={news} newsListChange={newsListChange} setNewsListChange={setNewsListChange} setIsNoNews={setIsNoNews} setUrl={() => handleClick(news.url)} />
 
-                        ))}
-                        {isLoading &&
-                            <Loading_Spinner />}
+                                ))}
+
+                            </>
+                        }
                     </div>
                 </div>
 

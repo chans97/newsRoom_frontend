@@ -26,7 +26,6 @@ function NewsList_mobile({
 
                     <h1 className='card-list-title'>news scraped by {keyword} </h1>
                 </div>
-                {isLoading && <Loading_Spinner />}
                 {isError && <p>오류가 있습니다. 다시 시작해주세요.</p>}
                 <div className='toggle-period-section'>
                     <span className='toggle-description'>
@@ -36,9 +35,15 @@ function NewsList_mobile({
                     <TogglePeriod isTodayOnlyActive={isTodayOnlyActive} setIsTodayOnlyActive={setIsTodayOnlyActive} />
                 </div>
                 <div className="sub-container">
-                    {renderdNews?.map((news) => (
-                        <NewsCardScraped key={news.id} news={news} newsListChange={newsListChange} setNewsListChange={setNewsListChange} setIsNoNews={setIsNoNews} />
-                    ))}
+
+                    {isLoading ? <Loading_Spinner />
+                        :
+                        <>
+                            {renderdNews?.map((news) => (
+                                <NewsCardScraped key={news.id} news={news} newsListChange={newsListChange} setNewsListChange={setNewsListChange} setIsNoNews={setIsNoNews} />
+                            ))}
+                        </>
+                    }
                 </div>
             </div>
             <style jsx>{`

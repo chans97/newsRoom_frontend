@@ -101,7 +101,7 @@ function NewsList() {
                 })
             setLoading(false);
         }
-
+        setLoading(true)
         fetchData();
     }, [newsListChange]);
 

@@ -58,13 +58,16 @@ export default function NewsList_pc({
                         </div>
                     </div>
                     <div className="sub-container">
-                        {newsData?.map((news) => (
-                            <NewsCard key={news.news_id} news={news} keyword={keyword} user_id={loginContext.loggedIn}
-                                setUrl={() => handleClick(news.url)} />
-                        ))}
+                        {isLoading ?
+                            <Loading_Spinner /> : <>
+                                {newsData?.map((news) => (
+                                    <NewsCard key={news.news_id} news={news} keyword={keyword} user_id={loginContext.loggedIn}
+                                        setUrl={() => handleClick(news.url)} />
+                                ))}
+                            </>
+                        }
 
-                        {isLoading &&
-                            <Loading_Spinner />}
+
                         <div className='newLoading-section'>
 
                             {isNewLoading && <Loading_Spinner></Loading_Spinner>}
