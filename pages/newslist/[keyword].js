@@ -112,12 +112,14 @@ export default function NewsList() {
     const [isRecentlyActive, setIsRecentlyActive] = useState(false);
     const [reloadRecentlyActive, setReloadRecentlyActive] = useState(false);
 
+    const [currentIndex, setCurrentIndex] = useState(0);
     const loginContext = useLoginContext();
 
     // userEffect chain 을 통해서 비동기 속의 동기성을 확보
     useEffect(() => {
         setLastIndex(0);
         setReloadRecentlyActive(isRecentlyActive)
+        setCurrentIndex(0);
     }, [isRecentlyActive])
 
     useEffect(() => {
@@ -168,6 +170,8 @@ export default function NewsList() {
                         newsData={newsData}
                         isRecentlyActive={isRecentlyActive}
                         setIsRecentlyActive={setIsRecentlyActive}
+                        currentIndex={currentIndex}
+                        setCurrentIndex={setCurrentIndex}
                     >
                     </NewsList_pc> :
                     <NewsList_mobile
@@ -179,6 +183,8 @@ export default function NewsList() {
                         newsData={newsData}
                         isRecentlyActive={isRecentlyActive}
                         setIsRecentlyActive={setIsRecentlyActive}
+                        currentIndex={currentIndex}
+                        setCurrentIndex={setCurrentIndex}
                     >
                     </NewsList_mobile>}
             </>

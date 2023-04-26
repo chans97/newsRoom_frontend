@@ -79,7 +79,7 @@ const NewsCardScraped = ({ news, newsListChange, setNewsListChange, setIsNoNews,
         cursor:pointer;
       }
       .newscard {
-        opacity: 0; /* 초기에는 숨김 */
+        opacity: 1;
         transition: all 0.3s ease-in-out;
         display: flex;
         justify-content: space-between;
@@ -88,12 +88,12 @@ const NewsCardScraped = ({ news, newsListChange, setNewsListChange, setIsNoNews,
         border: 2px solid #5D5FEF;
         border-radius: 5px;
         margin-bottom: 10px;
-        transform: perspective(1000px) rotateX(90deg) rotateY(0deg);
+        // transform: perspective(1000px) rotateX(90deg) rotateY(0deg);
       
     }
     .show{
       opacity: 1;
-      transform: perspective(1000px) rotateX(00deg) rotateY(0deg);
+      // transform: perspective(1000px) rotateX(00deg) rotateY(0deg);
     }
 
         .newscard h3 {

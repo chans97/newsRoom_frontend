@@ -16,16 +16,10 @@ function NewsList_mobile({
     setNewsListChange,
     setIsNoNews,
     isTodayOnlyActive,
-    setIsTodayOnlyActive
+    setIsTodayOnlyActive,
+    currentIndex,
+    setCurrentIndex
 }) {
-    const [currentIndex, setCurrentIndex] = useState(0);
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setCurrentIndex((prevIndex) => prevIndex + 1);
-        }, 250);
-        return () => clearInterval(interval);
-    }, []);
     return (
         <>
             <Navigation />
@@ -48,7 +42,7 @@ function NewsList_mobile({
                     {isLoading ? <Loading_Spinner />
                         :
                         <>
-                            {renderdNews?.slice(0, currentIndex).map((news) => (
+                            {renderdNews?.map((news) => (
                                 <NewsCardScraped key={news.id} news={news} newsListChange={newsListChange} setNewsListChange={setNewsListChange} setIsNoNews={setIsNoNews} />
                             ))}
                         </>

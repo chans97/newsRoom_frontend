@@ -57,13 +57,14 @@ function NewsList() {
     const router = useRouter();
     const { keyword_id, keyword } = router.query;
     const [newsData, setNewsData] = useState([]);
-    const [isLoading, setLoading] = useState(false);
+    const [isLoading, setLoading] = useState(true);
     const [isError, setIsError] = useState(false);
     const [newsListChange, setNewsListChange] = useState(false);
     const [isNoNews, setIsNoNews] = useState(false);
     const [isTodayOnlyActive, setIsTodayOnlyActive] = useState(false);
     const [renderdNews, setRenderdNews] = useState([]);
     const loginContext = useLoginContext();
+    const [currentIndex, setCurrentIndex] = useState(0);
 
 
     const newsToday = () => {
@@ -72,6 +73,7 @@ function NewsList() {
         const todayMonth = ("0" + (today.getMonth() + 1)).slice(-2);
         const todayDate = ("0" + today.getDate()).slice(-2);
         const todayStr = `${todayYear}-${todayMonth}-${todayDate}`;
+
 
         return newsData.filter((news) => {
             const createdAt = new Date(news.created_at);
@@ -114,6 +116,8 @@ function NewsList() {
     useEffect(() => {
         const newsToRender = isTodayOnlyActive ? newsToday() : newsData;
         setRenderdNews(newsToRender);
+        setCurrentIndex(0);
+
     }, [newsData, isTodayOnlyActive])
 
     const isPc = useMediaQuery({
@@ -133,6 +137,8 @@ function NewsList() {
                     setIsNoNews={setIsNoNews}
                     isTodayOnlyActive={isTodayOnlyActive}
                     setIsTodayOnlyActive={setIsTodayOnlyActive}
+                    currentIndex={currentIndex}
+                    setCurrentIndex={setCurrentIndex}
                 ></NewsList_pc> : <NewsList_mobile
                     keyword={keyword}
                     isLoading={isLoading}
@@ -143,6 +149,8 @@ function NewsList() {
                     setIsNoNews={setIsNoNews}
                     isTodayOnlyActive={isTodayOnlyActive}
                     setIsTodayOnlyActive={setIsTodayOnlyActive}
+                    currentIndex={currentIndex}
+                    setCurrentIndex={setCurrentIndex}
                 ></NewsList_mobile>}
             </>
         </NoSsr>

@@ -18,16 +18,24 @@ export default function NewsList_pc({
     newsData,
     loginContext,
     isRecentlyActive,
-    setIsRecentlyActive
+    setIsRecentlyActive,
+    currentIndex,
+    setCurrentIndex
 }) {
-    const [currentIndex, setCurrentIndex] = useState(0);
 
     useEffect(() => {
+
+        let count = 10; // 10회 반복
         const interval = setInterval(() => {
-            setCurrentIndex((prevIndex) => prevIndex + 1);
+            if (!isLoading) {
+                count -= 1
+                if (count === 0) clearInterval(interval);
+                setCurrentIndex((prevIndex) => prevIndex + 1);
+            }
         }, 250);
+
         return () => clearInterval(interval);
-    }, []);
+    }, [isLoading, isNewLoading]);
 
     const [url, setUrl] = useState('');
     const handleClick = (newsUrl) => {
@@ -73,6 +81,8 @@ export default function NewsList_pc({
                                         news={news}
                                         keyword={keyword}
                                         user_id={loginContext.loggedIn}
+                                        setUrl={() => handleClick(news.url)}
+
                                     />
                                 ))}
                             </>

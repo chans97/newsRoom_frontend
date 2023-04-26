@@ -12,16 +12,24 @@ export default function NewsList_mobile({ isNewLoading,
   newsData,
   loginContext,
   isRecentlyActive,
-  setIsRecentlyActive
+  setIsRecentlyActive,
+  currentIndex,
+  setCurrentIndex
 }) {
-  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
+
+    let count = 10; // 10회 반복
     const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => prevIndex + 1);
+      if (!isLoading) {
+        count -= 1
+        if (count === 0) clearInterval(interval);
+        setCurrentIndex((prevIndex) => prevIndex + 1);
+      }
     }, 250);
+
     return () => clearInterval(interval);
-  }, []);
+  }, [isLoading, isNewLoading]);
 
 
 

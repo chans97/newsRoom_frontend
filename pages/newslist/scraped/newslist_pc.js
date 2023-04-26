@@ -20,16 +20,11 @@ export default function NewsList_pc({
     setNewsListChange,
     setIsNoNews,
     isTodayOnlyActive,
-    setIsTodayOnlyActive
+    setIsTodayOnlyActive,
+    currentIndex,
+    setCurrentIndex
 }) {
-    const [currentIndex, setCurrentIndex] = useState(0);
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setCurrentIndex((prevIndex) => prevIndex + 1);
-        }, 250);
-        return () => clearInterval(interval);
-    }, []);
 
     const [url, setUrl] = useState('');
     const handleClick = (newsUrl) => {
@@ -70,8 +65,9 @@ export default function NewsList_pc({
                         {isLoading ?
                             <Loading_Spinner />
                             : <>
-                                {renderdNews?.slice(0, currentIndex).map((news) => (
-                                    <NewsCardScraped key={news.id} news={news} newsListChange={newsListChange} setNewsListChange={setNewsListChange} setIsNoNews={setIsNoNews} setUrl={() => handleClick(news.url)} />
+                                {renderdNews?.map((news) => (
+                                    <NewsCardScraped key={news.id} news={news} newsListChange={newsListChange} setNewsListChange={setNewsListChange} setIsNoNews={setIsNoNews}
+                                        setUrl={() => handleClick(news.url)} />
 
                                 ))}
 
