@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import NewsCard from '../../components/newsCard'
 import Navigation from '../../components/navbar'
@@ -20,7 +20,14 @@ export default function NewsList_pc({
     isRecentlyActive,
     setIsRecentlyActive
 }) {
+    const [currentIndex, setCurrentIndex] = useState(0);
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentIndex((prevIndex) => prevIndex + 1);
+        }, 250);
+        return () => clearInterval(interval);
+    }, []);
 
     const [url, setUrl] = useState('');
     const handleClick = (newsUrl) => {
@@ -60,9 +67,13 @@ export default function NewsList_pc({
                     <div className="sub-container">
                         {isLoading ?
                             <Loading_Spinner /> : <>
-                                {newsData?.map((news) => (
-                                    <NewsCard key={news.news_id} news={news} keyword={keyword} user_id={loginContext.loggedIn}
-                                        setUrl={() => handleClick(news.url)} />
+                                {newsData?.slice(0, currentIndex).map((news) => (
+                                    <NewsCard
+                                        key={news.news_id}
+                                        news={news}
+                                        keyword={keyword}
+                                        user_id={loginContext.loggedIn}
+                                    />
                                 ))}
                             </>
                         }

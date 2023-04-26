@@ -4,6 +4,7 @@ import Navigation from '../../components/navbar'
 import { v4 as uuidv4 } from 'uuid';
 import Loading_Spinner from '../../components/loading'
 import TogglePeriod from '../../components/toggle_period';
+import { useEffect, useState } from 'react';
 export default function NewsList_mobile({ isNewLoading,
   keyword,
   isLoading,
@@ -13,6 +14,14 @@ export default function NewsList_mobile({ isNewLoading,
   isRecentlyActive,
   setIsRecentlyActive
 }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) => prevIndex + 1);
+    }, 250);
+    return () => clearInterval(interval);
+  }, []);
 
 
 
@@ -39,8 +48,13 @@ export default function NewsList_mobile({ isNewLoading,
             <Loading_Spinner />
             :
             <>
-              {newsData?.map((news) => (
-                <NewsCard key={news.news_id} news={news} keyword={keyword} user_id={loginContext.loggedIn} />
+              {newsData?.slice(0, currentIndex).map((news) => (
+                <NewsCard
+                  key={news.news_id}
+                  news={news}
+                  keyword={keyword}
+                  user_id={loginContext.loggedIn}
+                />
               ))}
             </>}
           <div className='newLoading-section'>

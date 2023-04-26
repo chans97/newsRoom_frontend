@@ -3,6 +3,7 @@ import NewsCardScraped from '../../../components/newsCardScraped'
 import Navigation from '../../../components/navbar'
 import TogglePeriod from '../../../components/toggle_period';
 import Loading_Spinner from '../../../components/loading';
+import { useEffect, useState } from 'react';
 
 
 function NewsList_mobile({
@@ -17,6 +18,14 @@ function NewsList_mobile({
     isTodayOnlyActive,
     setIsTodayOnlyActive
 }) {
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentIndex((prevIndex) => prevIndex + 1);
+        }, 250);
+        return () => clearInterval(interval);
+    }, []);
     return (
         <>
             <Navigation />
@@ -39,7 +48,7 @@ function NewsList_mobile({
                     {isLoading ? <Loading_Spinner />
                         :
                         <>
-                            {renderdNews?.map((news) => (
+                            {renderdNews?.slice(0, currentIndex).map((news) => (
                                 <NewsCardScraped key={news.id} news={news} newsListChange={newsListChange} setNewsListChange={setNewsListChange} setIsNoNews={setIsNoNews} />
                             ))}
                         </>
