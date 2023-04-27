@@ -4,7 +4,7 @@ export default function Document() {
     return (
         <Html lang="en">
             <Head >
-                <meta name="theme-color" content="#FF98BA"></meta>
+                <meta name="theme-color" content="#5D5FEF"></meta>
                 <link rel="manifest" href="/manifest.json" />
                 <link
                     href="/public/favicons/favicon-16x16.png"
@@ -19,7 +19,7 @@ export default function Document() {
                     sizes="32x32"
                 />
                 <link rel="apple-touch-icon" href="/public/favicons/apple-icon-192x192.png"></link>
-                <meta name="msapplication-TileColor" content="#FF98BA"></meta>
+                <meta name="msapplication-TileColor" content="#5D5FEF"></meta>
                 <link
                     rel="apple-touch-startup-image"
                     href="/public/splash/splash.png"
