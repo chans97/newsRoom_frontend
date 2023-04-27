@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import Image from 'next/image';
 
@@ -18,6 +18,44 @@ export default function Login({ fail }) {
   const [isLoading, setLoading] = useState(false);
   const [loginFail, setLoginFail] = useState(false);
   const [ID, setID] = useState("");
+
+
+
+  const [downloaded, setDownloaded] = useState(true);
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+
+
+  // let deferredPrompt = null;
+
+  useEffect(() => {
+    console.log("Listening for Install prompt");
+    window.addEventListener('beforeinstallprompt', event => {
+      event.preventDefault();
+      setDeferredPrompt(event);
+      // deferredPrompt = event;
+      if (!event) {
+        alert('이미 앱이 설치되어 있거나 앱을 설치할 수 없는 환경입니다')
+      }
+      else {
+        setDownloaded(false)
+      }
+    })
+  }, []);
+
+
+  const installApp = () => {
+    if (!deferredPrompt) {
+      alert('이미 앱이 설치되어 있거나 앱을 설치할 수 없는 환경입니다')
+      return
+    }
+
+    deferredPrompt.prompt()
+  };
+
+
+
+
+
 
   async function loginWithCompanyID(id) {
     let result = {}
@@ -63,6 +101,12 @@ export default function Login({ fail }) {
 
   return (
     <>
+      <div className={downloaded ? "download-button display-none" : "download-button"} onClick={installApp}>
+        <span>언제나 newsroom을 사용하고 싶다면, </span>
+        <span className="underline-white">다운로드</span>
+      </div>
+
+
       <div className="desktop-container">
 
         <div className="desktop-section">
@@ -195,6 +239,7 @@ export default function Login({ fail }) {
                 justify-content: center;
                 align-items: center;
             }
+
       .main-container{
         display: flex;
         flex-direction: column;
@@ -230,7 +275,30 @@ export default function Login({ fail }) {
         .button-wrapper {
           margin: 10px;
         }
+        .underline-white{
 
+          text-decoration: underline;
+        }
+        .download-button{
+          background-color: #3537bd;
+          border: none;
+          color: #fff;
+          cursor: pointer;
+          font-size: 16px;
+          font-weight: bold;
+          padding: 10px 20px;
+          text-align: center;
+          text-decoration: none;
+          
+          transition: background-color 0.3s ease;
+          width:100%;
+        }
+        .display-none{
+          display: none;
+        }
+        .download-button:hover {
+          background-color: #1619b0;
+        }
         .button-search {
           background-color: #5D5FEF;
           border: none;
